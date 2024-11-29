@@ -1,4 +1,4 @@
-<data><xpath expr="/t[@t-name='sale.report_saleorder_document_copy_19_copy_2_copy_3_copy_1_copy_1']" position="replace" mode="inner"><t t-call="web.external_layout">
+<data><xpath expr="/t[@t-name='sale.report_saleorder_document_copy_19_copy_2_copy_3_copy_1_copy_1_copy_1']" position="replace" mode="inner"><t t-call="web.external_layout">
             <style>
         .o_small-fs {
           font-size: 12px; /* Réduit la taille de la police à 12px */
@@ -56,32 +56,38 @@
           margin-top: 10px; /* Réduit l'espacement au-dessus du tableau */
         }
         
-        .total {
-            font-size: 12px;
+        .col-6 {
+            line-height: 0.25em;
         }
-
-      </style><t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/><t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/><div class="page">
-                        <h2 class="mt-4">
-          <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
-          <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
-          <span t-else="">Order # </span>
-          <span t-field="doc.name">SO0000</span>
-        </h2>
+        
+        .row.mt-2.mb-2 {
+            line-height: 0.25em;
+        }
+        
+      </style><t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/><t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/><div class="page" style="margin-top: -25px;">
+                <h2 class="mt-4">
+                    <span t-if="env.context.get('proforma', False) or is_pro_forma">Devis # </span>
+                    <span t-elif="doc.state in ['draft','sent']">Devis #</span>
+                    <span t-else="">Order # </span>
+                    <span t-field="doc.name">SO0000</span>
+                </h2>
                 <div class="row mt-2 mb-2" id="informations">
                     <div class="col-6">
-                        <h6><br/></h6><h6><strong><u><span class="o_small-fs">Adresse de Livraison</span>
+                        <h6>
+                            <br/>
+                        </h6>
+                        <h6>
+                            <strong>
+                                <u>
+                                    <span class="o_small-fs">ADRESSE DE LIVRAISON</span>
                                 </u>
                             </strong>
                         </h6>
                         <h6>
                             <span t-field="doc.partner_shipping_id.name" style="font-weight: bolder;" class="o_small-fs">nom</span>
                             <br/>
-                        </h6>
-                        <h6>
                             <span t-field="doc.partner_shipping_id.street" class="o_small-fs">street</span>
                             <br/>
-                        </h6>
-                        <h6>
                             <span t-field="doc.partner_shipping_id.zip" class="o_small-fs">zip</span>
                             <span class="o_small-fs"> - </span>
                             <span t-field="doc.partner_shipping_id.city" class="o_small-fs">city</span>
@@ -96,33 +102,30 @@
                         </h6>
                         <h6>
                             <span class="o_small-fs">Email : </span>
-                            <span t-field="doc.user_id.email" class="o_small-fs">mail</span>
-                        </h6>
+                            <span t-field="doc.user_id.email" class="o_small-fs">mail</span> </h6><p><br/></p>
                     </div>
                     <div class="col-6">
-                        <h6><strong><span class="o_small-fs">N° de Client : </span>
+                        <h6>
+                            <strong>
+                                <span class="o_small-fs">N° de Client : </span>
                             </strong>
-                            <span class="o_small-fs">
-                                <span t-field="doc.partner_id.id" style="font-weight: bolder;" class="o_small-fs">id client</span>
-                                <span t-field="doc.partner_id.company_registry" style="font-weight: bolder;" class="o_small-fs">​</span>
+                            <span>
+                                <span t-field="doc.partner_id.id" style="font-weight: bolder font-size: 10px;">id client</span>
+                                <span t-field="doc.partner_id.company_registry" style="font-weight: bolder;">​</span>
                             </span>
                         </h6>
                         <h6>
                             <strong>
                                 <u>
-                                    <span class="o_small-fs">Adresse de facturation</span>
+                                    <span class="o_small-fs">ADRESSE DE FACTURATION</span>
                                 </u>
                             </strong>
                         </h6>
                         <h6>
                             <span t-field="doc.partner_invoice_id.name" style="font-weight: bolder;" class="o_small-fs">nom</span>
                             <br/>
-                        </h6>
-                        <h6>
                             <span t-field="doc.partner_invoice_id.street" class="o_small-fs">street</span>
                             <br/>
-                        </h6>
-                        <h6>
                             <span t-field="doc.partner_invoice_id.zip" class="o_small-fs">zip</span>
                             <span class="o_small-fs"> - </span>
                             <span t-field="doc.partner_invoice_id.city" class="o_small-fs">city</span>
@@ -130,16 +133,13 @@
                         </h6>
                         <h6>
                             <span class="o_small-fs">
-                                <strong>
-                                    </strong></span><strong><span style="font-size: 11px;">Acheteur:</span></strong><span class="o_small-fs"><strong>
-                                </strong>
+                                <strong/>Acheteur: 
+                                <span t-field="doc.partner_id.buyer_id" style="font-weight: bolder;">acheteur</span>
                             </span>
                         </h6>
-                        <h6>
-                            <span class="o_small-fs">
-                                <span t-field="doc.partner_id.buyer_id" style="font-weight: bolder font-size: 10px;">acheteur</span>
-                            </span>
-                        </h6>
+                        <p>
+                            <br/>
+                        </p>
                     </div>
                 </div>
                 <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()">
@@ -209,7 +209,7 @@
                         <div t-attf-class="col-8" style="width: 100%;">
                             <table class="table table-sm table-borderless">
                                 <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                                <t t-call="sale.document_tax_totals_copy_23"/>
+                                <t t-call="sale.document_tax_totals_copy_23_copy_1"/>
                             </table>
                         </div>
                     </div>
