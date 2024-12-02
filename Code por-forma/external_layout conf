@@ -28,7 +28,7 @@
             <span class="font" t-field="doc.date_order" t-options="{&quot;widget&quot;: &quot;date&quot;}">25-05-502</span>
           </h2>
         </div>
-        <img src="/web/image/913-4c1a1ba4/SOMADIS-BLACK.png" alt="" class="float-start img img-fluid o_we_custom_image"/>
+        <img src="/web/image/913-4c1a1ba4/SOMADIS-BLACK.png" alt="" class="float-start img img-fluid o_we_custom_image padding-small"/>
 
         <div class="clearfix mb8">
           <p><br/></p>
@@ -106,7 +106,7 @@
                   <h6><span class="o_small-fs">76 Boulevard du Chaudron - 97490 - Sainte-Clotilde<br/>Tél : 0262 94 73 73 - Mail : info@somadis.com</span><br/><span class="o_small-fs">SARL au capital de 1.000.000 Euros</span><br/><span class="o_small-fs">R.C 86 B 191 - SIRET : 338 509 540 00047 - APE 4649 Z</span><br/><span class="o_small-fs">IBAN : FR76 1010 7003 0500 6409 1316 185</span><br/><span class="o_small-fs">BIC : BREDFRPPXXX</span></h6>
                 </div>
                 <div class="col-6">
-                  <p><span class="o_small-fs">Signature et Bon pour accord</span></p>
+                  <table class="table table-bordered o_table" style="margin-top: 13.5px;"><tbody><tr style="height: 148.5px;"><td style="background-color: rgba(0, 0, 0, 0.1);"><h6><span class="o_small-fs">Signature et Bon pour accord</span></h6><p><span t-field="doc.signature" t-options-widget="'image'" t-options-qweb_img_raw_data="1"> </span><br/></p></td></tr></tbody></table><p/><p/>
                 </div>
               </div>
             </div>
