@@ -1,7 +1,9 @@
-<data><xpath expr="/t[@t-name='sale.report_saleorder_document_copy_19_copy_2_copy_3_copy_1_copy_1_copy_1']" position="replace" mode="inner"><t t-call="web.external_layout">
-            <style>
+<data>
+    <xpath expr="/t[@t-name='sale.report_saleorder_document_copy_19_copy_2_copy_3_copy_1_copy_1_copy_1_copy_1']" position="replace" mode="inner">
+            <t t-call="web.external_layout">
+                <style>
         .o_small-fs {
-          font-size: 12px; /* Réduit la taille de la police à 12px */
+          font-size: 13px; /* Réduit la taille de la police à 12px */
         }
         .page {
           margin-top: -20px; /* Remonte la page */
@@ -64,180 +66,187 @@
             line-height: 0.25em;
         }
         
-      </style><t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/><t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/><div class="page" style="margin-top: -25px;">
-                <h2 class="mt-4">
-                    <span t-if="env.context.get('proforma', False) or is_pro_forma">Devis # </span>
-                    <span t-elif="doc.state in ['draft','sent']">Devis #</span>
-                    <span t-else="">Order # </span>
-                    <span t-field="doc.name">SO0000</span>
-                </h2>
-                <div class="row mt-2 mb-2" id="informations">
-                    <div class="col-6">
-                        <h6>
-                            <br/>
-                        </h6>
-                        <h6>
-                            <strong>
-                                <u>
-                                    <span class="o_small-fs">ADRESSE DE LIVRAISON</span>
-                                </u>
-                            </strong>
-                        </h6>
-                        <h6>
-                            <span t-field="doc.partner_shipping_id.name" style="font-weight: bolder;" class="o_small-fs">nom</span>
-                            <br/>
-                            <span t-field="doc.partner_shipping_id.street" class="o_small-fs">street</span>
-                            <br/>
-                            <span t-field="doc.partner_shipping_id.zip" class="o_small-fs">zip</span>
-                            <span class="o_small-fs"> - </span>
-                            <span t-field="doc.partner_shipping_id.city" class="o_small-fs">city</span>
-                        </h6>
-                        <h6>
-                            <strong>
-                                <span class="o_small-fs">Suivi par : </span>
-                            </strong>
-                            <span class="o_small-fs"/>
-                            <span t-field="doc.user_id" style="font-weight: bolder;" class="o_small-fs">VENDEUR</span>
-                            <span class="o_small-fs"/>
-                        </h6>
-                        <h6>
-                            <span class="o_small-fs">Email : </span>
-                            <span t-field="doc.user_id.email" class="o_small-fs">mail</span> </h6><p><br/></p>
-                    </div>
-                    <div class="col-6">
-                        <h6>
-                            <strong>
-                                <span class="o_small-fs">N° de Client : </span>
-                            </strong>
-                            <span>
-                                <span t-field="doc.partner_id.id" style="font-weight: bolder font-size: 10px;">id client</span>
-                                <span t-field="doc.partner_id.company_registry" style="font-weight: bolder;">​</span>
-                            </span>
-                        </h6>
-                        <h6>
-                            <strong>
-                                <u>
-                                    <span class="o_small-fs">ADRESSE DE FACTURATION</span>
-                                </u>
-                            </strong>
-                        </h6>
-                        <h6>
-                            <span t-field="doc.partner_invoice_id.name" style="font-weight: bolder;" class="o_small-fs">nom</span>
-                            <br/>
-                            <span t-field="doc.partner_invoice_id.street" class="o_small-fs">street</span>
-                            <br/>
-                            <span t-field="doc.partner_invoice_id.zip" class="o_small-fs">zip</span>
-                            <span class="o_small-fs"> - </span>
-                            <span t-field="doc.partner_invoice_id.city" class="o_small-fs">city</span>
-                            <span class="o_small-fs"/>
-                        </h6>
-                        <h6>
-                            <span class="o_small-fs">
-                                <strong/>Acheteur: 
-                                <span t-field="doc.partner_id.buyer_id" style="font-weight: bolder;">acheteur</span>
-                            </span>
-                        </h6>
-                        <p>
-                            <br/>
-                        </p>
-                    </div>
-                </div>
-                <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()">
-                    <h6/>
-                </t>
-                <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)">
-                    <h6/>
-                </t>
-                <table class="table table-sm o_main_table table-borderless mt-2">
-                    <thead style="display: table-row-group">
-                        <tr>
-                            <th class="text-start o_small-fs">Référence</th>
-                            <th class="text-start o_small-fs">Libellé</th>
-                            <th class="text-end o_small-fs">Qté</th>
-                            <th class="text-end o_small-fs">P.U.</th>
-                            <th class="text-end o_small-fs" t-if="display_discount">Disc.%</th>
-                            <th class="text-end o_small-fs">Total HT</th>
-                            <th class="text-end o_small-fs">TVA</th>
-                        </tr>
-                    </thead>
-                    <tbody class="sale_tbody">
-                        <t t-set="current_subtotal" t-value="0"/>
-                        <t t-set="total_taxes" t-value="0"/>
-                        <t t-foreach="lines_to_report" t-as="line">
-                            <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-                            <t t-set="total_taxes" t-value="total_taxes + line.price_tax"/>
-                            <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                                <t t-if="not line.display_type">
-                                    <td class="text-start">
-                                        <span t-field="line.product_id.x_studio_reference_fournisseur" class="o_small-fs" style="font-weight: bolder;">15dsdc0z</span>
-                                    </td>
-                                    <td class="text-start">
-                                        <span t-field="line.name" class="o_small-fs" style="font-weight: bolder;">Bacon Burger</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <span t-field="line.product_uom_qty" class="o_small-fs" style="font-weight: bolder;">3</span>
-                                        <strong/>
-                                        <span t-if="line.product_packaging_id">
-                                            <strong>
-                      (</strong>
-                                            <span t-field="line.product_packaging_qty" class="o_small-fs" style="font-weight: bolder;"/>
-                                            <span t-field="line.product_packaging_id" class="o_small-fs" style="font-weight: bolder;"/>
-                                            <strong>)
-                    </strong>
-                                        </span>
-                                    </td>
-                                    <td class="text-end">
-                                        <span t-field="line.price_unit" class="o_small-fs" style="font-weight: bolder;">3</span>
-                                    </td>
-                                    <td t-if="display_discount" class="text-end">
-                                        <span t-field="line.discount" class="o_small-fs" style="font-weight: bolder;">-</span>
-                                    </td>
-                                    <td t-if="not line.is_downpayment" class="text-end o_price_total">
-                                        <span t-field="line.price_subtotal" class="o_small-fs" style="font-weight: bolder;">27.00</span>
-                                    </td>
-                                    <t t-set="taxes" t-value="', '.join([(tax.description or tax.name) for tax in line.tax_id])"/>
-                                    <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                        <span t-out="taxes">Tax 15%</span>
-                                    </td>
-                                </t>
-                            </tr>
-                        </t>
-                    </tbody>
-                </table>
-                <div class="clearfix" name="so_total_summary">
-                    <div id="total" class="row" name="total">
-                        <div t-attf-class="col-8" style="width: 100%;">
-                            <table class="table table-sm table-borderless">
-                                <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                                <t t-call="sale.document_tax_totals_copy_23_copy_1"/>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <br/>
-                </div>
-                <div>
-                    <h6>
-                        <strong/>
-                    </h6>
-                    <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true">
-                        <i class="fs-4 fa fa-info-circle mb-3" aria-label="Bannière Info"/>
-                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
+        .mt-4 {
+            font-size: 22px;
+            font-weight: bolder;
+        }
+
+      </style>
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+                <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/>
+                <div class="page" style="margin-top: -25px;">
+                    <h2 class="mt-4">
+                        <span t-if="env.context.get('proforma', False) or is_pro_forma">Devis # </span>
+                        <span t-elif="doc.state in ['draft','sent']">Devis #</span>
+                        <span t-else="">Order # </span>
+                        <span t-field="doc.name">SO0000</span>
+                    </h2>
+                    <div class="row mt-2 mb-2" id="informations">
+                        <div class="col-6">
                             <h6>
-                                <span class="o_small-fs">
-                                    <strong>Sous réserve de disponibilité en stock à la date de réception de votre commande.</strong>
+                                <strong>
+                                    <u>
+                                        <span class="o_small-fs">ADRESSE DE LIVRAISON</span>
+                                    </u>
+                                </strong>
+                            </h6>
+                            <h6>
+                                <span t-field="doc.partner_shipping_id.name" style="font-weight: bolder;" class="o_small-fs">nom</span>
+                                <br/>
+                                <span t-field="doc.partner_shipping_id.street" class="o_small-fs">street</span>
+                                <br/>
+                                <span t-field="doc.partner_shipping_id.zip" class="o_small-fs">zip</span>
+                                <span class="o_small-fs"> - </span>
+                                <span t-field="doc.partner_shipping_id.city" class="o_small-fs">city</span>
+                            </h6>
+                            <h6>
+                                <strong>
+                                    <span class="o_small-fs">Suivi par : </span>
+                                </strong>
+                                <span class="o_small-fs"/>
+                                <span t-field="doc.user_id" style="font-weight: bolder;" class="o_small-fs">VENDEUR</span>
+                                <span class="o_small-fs"/>
+                            </h6>
+                            <h6>
+                                <span class="o_small-fs">Email : </span>
+                                <span t-field="doc.user_id.email" class="o_small-fs">mail</span>
+                            </h6>
+                            <p>
+                                <br/>
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <h6>
+                                <strong>
+                                    <u>
+                                        <span class="o_small-fs">ADRESSE DE FACTURATION</span>
+                                    </u>
+                                </strong>
+                            </h6>
+                            <h6>
+                                <span t-field="doc.partner_invoice_id.name" style="font-weight: bolder;" class="o_small-fs">nom</span>
+                                <br/>
+                                <span t-field="doc.partner_invoice_id.street" class="o_small-fs">street</span>
+                                <br/>
+                                <span t-field="doc.partner_invoice_id.zip" class="o_small-fs">zip</span>
+                                <span class="o_small-fs"> - </span>
+                                <span t-field="doc.partner_invoice_id.city" class="o_small-fs">city</span>
+                                <span class="o_small-fs"/>
+                            </h6>
+                            <h6>
+                                <span class="o_small-fs">N° de Client : </span>
+                                <span t-field="doc.partner_id.id" class="o_small-fs">id clienbt</span>
+                            </h6>
+                            <h6>
+                                <span class="o_small-fs">Acheteur: 
+                                
+                                
+                                    <span t-field="doc.partner_id.buyer_id" style="font-weight: bolder;">acheteur</span>
                                 </span>
                             </h6>
-                            <h6>
-                                <span class="o_small-fs">Cette offre est valable pour une commande reçue sous un délai de 8 jours. Au delà, nous nous réservons le droit de modifier les prix et conditions de notre offre. Les délais de livraison sont donnés à titre indicatif et sans garantie. Les retard de livraison  ne donnent pas à l'acheteur le droit d'annuler la vente ou de refuser la marchandise. Ils ne peuvent donner lieu à retenue, compensation, pénalité ou dommages et intérêts.</span>
-                            </h6>
+                            <p>
+                                <br/>
+                            </p>
                         </div>
                     </div>
-                    <h6>
-                        <span t-if="doc.signature" class="signature"/>
+                    <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()">
+                        <h6/>
+                    </t>
+                    <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)">
+                        <h6/>
+                    </t>
+                    <table class="table table-sm o_main_table table-borderless mt-2">
+                        <thead>
+                            <tr>
+                                <th class="text-start o_small-fs">Référence</th>
+                                <th class="text-start o_small-fs">Libellé</th>
+                                <th class="text-end o_small-fs">Qté</th>
+                                <th class="text-end o_small-fs">P.U.</th>
+                                <th class="text-end o_small-fs" t-if="display_discount">Disc.%</th>
+                                <th class="text-end o_small-fs">Total HT</th>
+                                <th class="text-end o_small-fs">TVA</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-set="current_subtotal" t-value="0"/>
+                            <t t-set="total_taxes" t-value="0"/>
+                            <t t-foreach="lines_to_report" t-as="line">
+                                <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                                <t t-set="total_taxes" t-value="total_taxes + line.price_tax"/>
+                                <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                    <t t-if="not line.display_type">
+                                        <td class="text-start">
+                                            <span t-field="line.product_id.x_studio_reference_fournisseur" class="o_small-fs" style="font-weight: bolder;">15dsdc0z</span>
+                                        </td>
+                                        <td class="text-start">
+                                            <span t-field="line.name" class="o_small-fs" style="font-weight: bolder;">Bacon Burger</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.product_uom_qty" class="o_small-fs" style="font-weight: bolder;">3</span>
+                                            <strong/>
+                                            <span t-if="line.product_packaging_id">
+                                                <strong>
+                      (</strong>
+                                                <span t-field="line.product_packaging_qty" class="o_small-fs" style="font-weight: bolder;"/>
+                                                <span t-field="line.product_packaging_id" class="o_small-fs" style="font-weight: bolder;"/>
+                                                <strong>)
+                    </strong>
+                                            </span>
+                                        </td>
+                                        <td class="text-end" style="width:10%;">
+                                            <span t-field="line.price_unit" class="o_small-fs" style="font-weight: bolder;">3</span>
+                                        </td>
+                                        <td t-if="display_discount" class="text-end">
+                                            <span t-field="line.discount" class="o_small-fs" style="font-weight: bolder;">-</span>
+                                        </td>
+                                        <td t-if="not line.is_downpayment" class="text-end o_price_total" style="width:12%;">
+                                            <span t-field="line.price_subtotal" class="o_small-fs" style="font-weight: bolder;">27.00</span>
+                                        </td>
+                                        <t t-set="taxes" t-value="', '.join([(tax.description or tax.name) for tax in line.tax_id])"/>
+                                        <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}" style="width:10%;">
+                                            <span t-out="taxes">Tax 15%</span>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="clearfix" name="so_total_summary">
+                        <div id="total" class="row" name="total">
+                            <div t-attf-class="col-8" style="width: 100%;">
+                                <table class="table table-sm table-borderless">
+                                    <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                    <t t-call="sale.document_tax_totals_copy_23_copy_1_copy_1"/>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
                         <br/>
-                    </h6>
+                    </div>
+                    <div>
+                        <h6>
+                            <strong/>
+                        </h6>
+                        <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true">
+                            <i class="fs-4 fa fa-info-circle mb-3" aria-label="Bannière Info"/>
+                            <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
+                                <h6>
+                                    <span class="o_small-fs">
+                                        <strong>Sous réserve de disponibilité en stock à la date de réception de votre commande.</strong>
+                                    </span>
+                                </h6>
+                                <h6>
+                                    <span class="o_small-fs">Cette offre est valable pour une commande reçue sous un délai de 8 jours. Au delà, nous nous réservons le droit de modifier les prix et conditions de notre offre. Les délais de livraison sont donnés à titre indicatif et sans garantie. Les retard de livraison  ne donnent pas à l'acheteur le droit d'annuler la vente ou de refuser la marchandise. Ils ne peuvent donner lieu à retenue, compensation, pénalité ou dommages et intérêts.</span>
+                                </h6>
+                            </div>
+                        </div>
+                        <h6>
+                            <span t-if="doc.signature" class="signature"/>
+                            <br/>
+                        </h6>
+                    </div>
                 </div>
-            </div></t>
-    </xpath></data>
+            </t>
+    </xpath>
+</data>
